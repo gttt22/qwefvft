@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tienda | Estilo Epic Games</title>
+<style>
+  :root {
+    --bg: #101014;
+    --panel: #202024;
+    --panel-2: #2a2a30;
+    --line: #3a3a42;
+    --text: #fff;
+    --muted: #ffffffa6;
+    --accent: #0078f2;
+    --accent-hover: #1a8cff;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg); color: var(--text);
+    font-family: "Noto Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px; line-height: 1.5;
+  }
+  button { font: inherit; color: inherit; cursor: pointer; border: 0; background: none; }
+  :focus-visible { outline: 2px solid var(--accent-hover); outline-offset: 2px; }
+
+  /* Barra superior */
+  .topbar {
+    position: sticky; top: 0; z-index: 10;
+    display: flex; align-items: center; gap: 20px;
+    padding: 12px 32px; background: #18181c; border-bottom: 1px solid #000;
+  }
+  .logo {
+    display: grid; place-items: center; width: 38px; height: 44px; flex: none;
+    background: #fff; color: #000; font-weight: 700; font-size: 13px;
+    border-radius: 6px 6px 18px 18px;
+  }
+  .nav { display: flex; gap: 4px; }
+  .nav a { padding: 8px 14px; color: var(--muted); font-weight: 500; text-decoration: none; border-radius: 6px; }
+  .nav a:hover { background: var(--panel-2); color: #fff; }
+  .nav a.active { color: #fff; box-shadow: inset 0 -3px 0 var(--accent); border-radius: 0; }
+  .spacer { flex: 1; }
+  .btn { padding: 10px 20px; border-radius: 6px; font-weight: 600; background: var(--accent); transition: background .15s; }
+  .btn:hover { background: var(--accent-hover); }
+  .btn.secondary { background: #ffffff1f; }
+  .btn.secondary:hover { background: #ffffff33; }
+  .btn.small { padding: 7px 14px; font-size: 14px; }
+
+  main { max-width: 1280px; margin: 0 auto; padding: 24px 32px 60px; }
+
+  /* Destacado */
+  .featured { display: grid; grid-template-columns: 1fr 240px; gap: 16px; }
+  .hero {
+    position: relative; min-height: 460px; border-radius: 12px; overflow: hidden;
+    display: flex; align-items: flex-end; background: var(--panel);
+  }
+  .hero-bg {
+    position: absolute; inset: -20px; background-size: cover; background-position: center;
+    filter: blur(22px) brightness(.55); transform: scale(1.1);
+  }
+  .hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, #000000e0 8%, #0000 65%); }
+  .hero-icon {
+    position: absolute; top: 28px; right: 32px; z-index: 1;
+    width: 220px; height: 220px; border-radius: 18px; object-fit: cover;
+    box-shadow: 0 12px 40px #000a; background: var(--panel-2);
+  }
+  .hero-body { position: relative; z-index: 2; padding: 32px; max-width: 580px; }
+  .tag { display: inline-block; font-size: 12px; font-weight: 600; background: #ffffff26; padding: 3px 10px; border-radius: 4px; margin-bottom: 10px; }
+  .hero-body h1 { font-size: 42px; line-height: 1.1; margin-bottom: 8px; }
+  .hero-body p { color: #ffffffd9; margin-bottom: 18px; }
+  .hero-actions { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .price { font-weight: 600; }
+
+  .picker { display: flex; flex-direction: column; gap: 4px; }
+  .pick {
+    display: flex; align-items: center; gap: 12px; text-align: left; flex: 1;
+    padding: 10px 12px; border-radius: 10px; transition: background .15s;
+  }
+  .pick:hover, .pick[aria-selected="true"] { background: var(--panel-2); }
+  .pick img { width: 46px; height: 46px; border-radius: 8px; object-fit: cover; background: var(--panel-2); flex: none; }
+  .pick span { font-weight: 500; font-size: 14px; line-height: 1.3; }
+
+  /* Listado */
+  section { margin-top: 48px; }
+  h2 { font-size: 20px; margin-bottom: 16px; }
+  .grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 18px; }
+  .card { display: flex; flex-direction: column; gap: 10px; }
+  .cover {
+    position: relative; aspect-ratio: 1 / 1; border-radius: 12px; overflow: hidden;
+    background: var(--panel-2); transition: transform .2s, box-shadow .2s;
+  }
+  .cover img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .card:hover .cover { transform: translateY(-3px); box-shadow: 0 10px 24px #000a; }
+  .wish {
+    position: absolute; top: 10px; right: 10px; width: 34px; height: 34px; border-radius: 50%;
+    background: #000a; display: grid; place-items: center; font-size: 16px; opacity: 0; transition: opacity .15s;
+  }
+  .card:hover .wish, .wish:focus-visible, .wish[aria-pressed="true"] { opacity: 1; }
+  .wish[aria-pressed="true"] { color: var(--accent-hover); }
+  .kind { color: var(--muted); font-size: 13px; }
+  .name { font-weight: 600; }
+  .prices { font-size: 14px; }
+
+  .promo {
+    margin-top: 48px; padding: 32px; border-radius: 14px;
+    display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap;
+    background: linear-gradient(120deg, #0b3d91, #0078f2 60%, #3fc1ff);
+  }
+  .promo h3 { font-size: 26px; line-height: 1.15; }
+  .promo p { color: #ffffffd9; margin-top: 4px; }
+  .promo .btn { background: #fff; color: #000; }
+
+  footer { border-top: 1px solid var(--line); padding: 28px; color: var(--muted); font-size: 13px; text-align: center; }
+
+  .toast {
+    position: fixed; left: 50%; bottom: 24px; transform: translate(-50%, 20px);
+    background: #fff; color: #000; padding: 12px 20px; border-radius: 8px; font-weight: 600;
+    opacity: 0; pointer-events: none; transition: .25s; z-index: 50;
+  }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  @media (max-width: 1000px) { .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
+  @media (max-width: 800px) {
+    .topbar, main { padding-left: 16px; padding-right: 16px; }
+    .nav { display: none; }
+    .featured { grid-template-columns: 1fr; }
+    .picker { flex-direction: row; overflow-x: auto; }
+    .pick { min-width: 190px; }
+    .hero { min-height: 420px; }
+    .hero-icon { width: 120px; height: 120px; top: 20px; right: 20px; }
+    .hero-body h1 { font-size: 30px; }
+  }
+  @media (max-width: 520px) { .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; } }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="logo" aria-label="Logo">EGS</div>
+  <nav class="nav" aria-label="Principal">
+    <a href="#" class="active">Tienda</a>
+    <a href="#">Biblioteca</a>
+    <a href="#">Comunidad</a>
+  </nav>
+  <div class="spacer"></div>
+  <button class="btn secondary small" id="loginBtn">Iniciar sesión</button>
+  <button class="btn small" id="downloadBtn">Descargar</button>
+</header>
+
+<main>
+  <!-- Destacado -->
+  <div class="featured">
+    <article class="hero" aria-live="polite">
+      <div class="hero-bg" id="heroBg"></div>
+      <img class="hero-icon" id="heroIcon" alt="">
+      <div class="hero-body">
+        <span class="tag" id="heroTag"></span>
+        <h1 id="heroTitle"></h1>
+        <p id="heroDesc"></p>
+        <div class="hero-actions">
+          <button class="btn" id="heroBuy"></button>
+          <button class="btn secondary" id="heroWish"></button>
+          <span class="price" id="heroPrice"></span>
+        </div>
+      </div>
+    </article>
+    <div class="picker" id="picker" role="tablist" aria-label="Juegos destacados"></div>
+  </div>
+
+  <!-- Listado -->
+  <section>
+    <h2>Juegos populares</h2>
+    <div class="grid" id="grid"></div>
+  </section>
+
+  <div class="promo">
+    <div>
+      <h3>Gana 5 % de recompensa en cada compra</h3>
+      <p>Oferta de demostración.</p>
+    </div>
+    <button class="btn" id="promoBtn">Saber más</button>
+  </div>
+</main>
+
+<footer>Página de demostración con fines educativos. No está afiliada a Epic Games.</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+  /* ================================================
+     EDITA AQUÍ tus 5 juegos.
+     Las imágenes deben estar en la MISMA carpeta que
+     este archivo: icono1.png, icono2.png, ... icono5.png
+     ================================================ */
+  const games = [
+    { id: 1, name: "Fortnite",       genre: "Battle Royale", icon: "icono1.png", price: 0,     desc: "Salta del autobús de batalla, construye y sé el último en pie. Juega gratis con tus amigos." },
+    { id: 2, name: "Rocket League",  genre: "Deportes",      icon: "icono2.png", price: 0,     desc: "Fútbol con coches propulsados por cohetes. Partidas rápidas y muy competitivas." },
+    { id: 3, name: "Fall Guys",      genre: "Fiesta",        icon: "icono3.png", price: 0,     desc: "Carreras caóticas de hasta 60 jugadores a través de circuitos llenos de obstáculos." },
+    { id: 4, name: "Grand Theft Auto V", genre: "Acción",    icon: "icono4.png", price: 29.99, desc: "Un mundo abierto con tres protagonistas, atracos y modo online." },
+    { id: 5, name: "Cyberpunk 2077", genre: "Rol",           icon: "icono5.png", price: 59.99, discount: 50, desc: "Rol de acción en Night City, una megalópolis obsesionada con el poder y la tecnología." }
+  ];
+  // Los precios son de ejemplo; cámbialos como quieras.
+
+  const $ = (s) => document.querySelector(s);
+  const finalPrice = (g) => +(g.price * (1 - (g.discount || 0) / 100)).toFixed(2);
+  const money = (n) => n === 0 ? "Gratis" : "$" + n.toFixed(2);
+  const wishlist = new Set();
+  let current = 0, timer;
+
+  function toast(msg) {
+    const t = $("#toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toast._t);
+    toast._t = setTimeout(() => t.classList.remove("show"), 2200);
+  }
+
+  function priceHTML(g) {
+    if (g.price === 0) return "Gratis";
+    if (g.discount) return `<span style="background:var(--accent);border-radius:4px;padding:1px 6px;font-weight:700;font-size:13px">-${g.discount}%</span> <span style="color:var(--muted);text-decoration:line-through">${money(g.price)}</span> ${money(finalPrice(g))}`;
+    return money(g.price);
+  }
+
+  function renderPicker() {
+    $("#picker").innerHTML = games.map((g, i) => `
+      <button class="pick" role="tab" aria-selected="${i === current}" data-i="${i}">
+        <img src="${g.icon}" alt="" onerror="this.style.visibility='hidden'">
+        <span>${g.name}</span>
+      </button>`).join("");
+  }
+
+  function renderHero() {
+    const g = games[current];
+    $("#heroBg").style.backgroundImage = `url("${g.icon}")`;
+    $("#heroIcon").src = g.icon;
+    $("#heroIcon").alt = "Icono de " + g.name;
+    $("#heroTag").textContent = g.discount ? `Oferta -${g.discount}%` : g.genre;
+    $("#heroTitle").textContent = g.name;
+    $("#heroDesc").textContent = g.desc;
+    $("#heroBuy").textContent = g.price === 0 ? "Obtener" : "Comprar ahora";
+    $("#heroPrice").innerHTML = priceHTML(g);
+    $("#heroWish").textContent = wishlist.has(g.id) ? "✓ En tu lista" : "+ Lista de deseos";
+    $("#heroBuy").onclick = () => toast(`"${g.name}" añadido (demo)`);
+    $("#heroWish").onclick = () => toggleWish(g.id);
+    renderPicker();
+  }
+
+  function renderGrid() {
+    $("#grid").innerHTML = games.map(g => {
+      const on = wishlist.has(g.id);
+      return `
+      <article class="card">
+        <div class="cover">
+          <img src="${g.icon}" alt="${g.name}" onerror="this.style.visibility='hidden'">
+          <button class="wish" data-wish="${g.id}" aria-pressed="${on}"
+            aria-label="${on ? "Quitar de" : "Añadir a"} la lista de deseos: ${g.name}">${on ? "♥" : "♡"}</button>
+        </div>
+        <div>
+          <div class="kind">Juego base · ${g.genre}</div>
+          <div class="name">${g.name}</div>
+        </div>
+        <div class="prices">${priceHTML(g)}</div>
+      </article>`;
+    }).join("");
+  }
+
+  function toggleWish(id) {
+    const g = games.find(x => x.id === id);
+    if (wishlist.has(id)) { wishlist.delete(id); toast(g.name + " se quitó de tu lista de deseos"); }
+    else { wishlist.add(id); toast(g.name + " se añadió a tu lista de deseos"); }
+    renderGrid(); renderHero();
+  }
+
+  function goTo(i) { current = (i + games.length) % games.length; renderHero(); }
+  function startAuto() {
+    clearInterval(timer);
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    timer = setInterval(() => goTo(current + 1), 6000);
+  }
+
+  document.addEventListener("click", (e) => {
+    const w = e.target.closest("[data-wish]");
+    if (w) return toggleWish(+w.dataset.wish);
+    const p = e.target.closest(".pick");
+    if (p) { goTo(+p.dataset.i); startAuto(); }
+  });
+  $("#loginBtn").onclick = () => toast("Inicio de sesión de demostración");
+  $("#downloadBtn").onclick = () => toast("Esta es una página de demostración");
+  $("#promoBtn").onclick = () => toast("Oferta de demostración");
+  document.querySelector(".hero").addEventListener("mouseenter", () => clearInterval(timer));
+  document.querySelector(".hero").addEventListener("mouseleave", startAuto);
+
+  renderHero(); renderGrid(); startAuto();
+</script>
+</body>
+</html>
